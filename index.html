@@ -1,55 +1,71 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
+	<meta charset="UTF-8" />
+	<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+	<title>Document</title>
 </head>
-<body>
-    
-</body>
+
+<body></body>
+
 <script>
-    let humanScore = 0;
-    let computerScore = 0;
+	let humanScore = 0;
+	let computerScore = 0;
 
-    function playRound(humanChoice, computerChoice) {
-    const human = humanChoice.toLowerCase();
-    const computer = computerChoice.toLowerCase();
+	function playRound(humanChoice, computerChoice) {
+	const human = humanChoice.toLowerCase();
+	const computer = computerChoice.toLowerCase();
+	if (human === computer) {
+		console.log("It's a tie!");
+	} else if (
+		(human === "rock" && computer === "scissors") ||
+		(human === "paper" && computer === "rock") ||
+		(human === "scissors" && computer === "paper")
+	) {
+		humanScore++;
+		console.log(
+		`You win! ${human.charAt(0).toUpperCase() + human.slice(1)} beats ${computer}.`,
+		);
+	} else {
+		computerScore++;
+		console.log(
+		`You lose! ${computer.charAt(0).toUpperCase() + computer.slice(1)} beats ${human}.`,
+		);
+	}
+	console.log(`Human: ${humanScore} | Computer: ${computerScore}`);
+	}
 
-    if (human === computer) {
-        console.log("It's a tie!");
-    } else if (
-        (human === "rock" && computer === "scissors") ||
-        (human === "paper" && computer === "rock") ||
-        (human === "scissors" && computer === "paper")
-    ) {
-        humanScore++;
-        console.log(`You win! ${human.charAt(0).toUpperCase() + human.slice(1)} beats ${computer}.`);
-    } else {
-        computerScore++;
-        console.log(`You lose! ${computer.charAt(0).toUpperCase() + computer.slice(1)} beats ${human}.`);
-    }
+	function getComputerChoice() {
+		const randomNumber = Math.random();
+		if (randomNumber < 1 / 3) {
+			return "rock";
+		} else if (randomNumber < 2 / 3) {
+			return "paper";
+		} else {
+			return "scissors";
+		}
+	}
 
-    console.log(`Human: ${humanScore} | Computer: ${computerScore}`);
-    }
+	function getHumanChoice() {
+	const userInput = prompt("Choose rock, paper, or scissors:");
+	return userInput.toLowerCase();
+	}
 
+	function playGame() {
+		for (let i = 0; i < 5; i++) {
+			const human = getHumanChoice();
+			const computer = getComputerChoice();
+			playRound(human, computer);
+		}
+		if (humanScore > computerScore) {
+			console.log("You won the game!");
+		} else if (computerScore > humanScore) {
+			console.log("The computer won the game!");
+		} else {
+			console.log("It's a tie!");
+		}
+	}
 
-    function getComputerChoice() {
-        const randomNumber = Math.random();
-
-        if (randomNumber < 1 / 3) {
-            return "rock";
-        } else if (randomNumber < 2 / 3) {
-            return "paper";
-        } else {
-            return "scissors";
-        }
-        }
-
-    function getHumanChoice() {
-        const userInput = prompt("Choose rock, paper, or scissors:");
-        return userInput.toLowerCase();
-}
-
+	playGame();
 </script>
 </html>
