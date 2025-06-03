@@ -9,6 +9,31 @@
     
 </body>
 <script>
+    let humanScore = 0;
+    let computerScore = 0;
+
+    function playRound(humanChoice, computerChoice) {
+    const human = humanChoice.toLowerCase();
+    const computer = computerChoice.toLowerCase();
+
+    if (human === computer) {
+        console.log("It's a tie!");
+    } else if (
+        (human === "rock" && computer === "scissors") ||
+        (human === "paper" && computer === "rock") ||
+        (human === "scissors" && computer === "paper")
+    ) {
+        humanScore++;
+        console.log(`You win! ${human.charAt(0).toUpperCase() + human.slice(1)} beats ${computer}.`);
+    } else {
+        computerScore++;
+        console.log(`You lose! ${computer.charAt(0).toUpperCase() + computer.slice(1)} beats ${human}.`);
+    }
+
+    console.log(`Human: ${humanScore} | Computer: ${computerScore}`);
+    }
+
+
     function getComputerChoice() {
         const randomNumber = Math.random();
 
@@ -21,9 +46,9 @@
         }
         }
 
-        function getHumanChoice() {
-  const userInput = prompt("Choose rock, paper, or scissors:");
-  return userInput.toLowerCase();
+    function getHumanChoice() {
+        const userInput = prompt("Choose rock, paper, or scissors:");
+        return userInput.toLowerCase();
 }
 
 </script>
