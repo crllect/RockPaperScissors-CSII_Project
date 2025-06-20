@@ -3,84 +3,111 @@
 <head>
 	<meta charset="UTF-8" />
 	<meta name="viewport" content="width=device-width, initial-scale=1.0" />
-	<title>Document</title>
+	<title>Rock Paper Scissors</title>
+	<style>
+		body {
+			font-family: Arial, sans-serif;
+			max-width: 600px;
+			margin: 0 auto;
+			padding: 20px;
+			text-align: center;
+		}
+
+		.buttons {
+			margin: 20px 0;
+		}
+
+		button {
+			font-size: 18px;
+			padding: 15px 30px;
+			margin: 0 10px;
+			border: none;
+			border-radius: 5px;
+			background-color: #007bff;
+			color: white;
+			cursor: pointer;
+		}
+		button:hover {
+			background-color: #0056b3;
+		}
+
+		#results {
+			margin: 20px 0;
+			padding: 20px;
+			border: 1px solid #ddd;
+			border-radius: 5px;
+			background-color: #f8f9fa;
+			min-height: 100px;
+		}
+
+		#score {
+			font-size: 20px;
+			font-weight: bold;
+			margin: 10px 0;
+		}
+
+		.winner {
+			font-size: 24px;
+			color: #28a745;
+			font-weight: bold;
+		}
+	</style>
 </head>
 
-<body></body>
+<body>
+	<h1>Rock Paper Scissors</h1>
+	<div class="buttons">
+		<button id="rock">Rock</button>
+		<button id="paper">Paper</button>
+		<button id="scissors">Scissors</button>
+	</div>
+	<div id="results">
+		<p>First to 5 points wins</p>
+	</div>
+	<div id="score">Human: 0 | Computer: 0</div>
+</body>
 
 <script>
-	/*
-		Initialize Scores
-		Set humanScore to 0
-		Set computerScore to 0
-		
-		Define Function playRound(humanChoice, computerChoice):
-		    Convert both choices to lowercase
-		    If humanChoice equals computerChoice:
-		        Output "It's a tie!"
-		    Else if humanChoice beats computerChoice:
-		        Increase humanScore by 1
-		        Output "You win!" with the winning choices
-		    Else:
-		        Increase computerScore by 1
-		        Output "You lose!" with the winning choices
-		    Output the current scores
-		
-		Define Function getComputerChoice():
-		    Generate a random number between 0 and 1
-		    If number < 1/3, return "rock"
-		    Else if number < 2/3, return "paper"
-		    Else return "scissors"
-		
-		Define Function getHumanChoice():
-		    Prompt user for input: "Choose rock, paper, or scissors"
-		    Return input converted to lowercase
-		
-		Define Function playGame():
-		    Repeat 5 times:
-		        Get humanChoice from user
-		        Get computerChoice randomly
-		        Call playRound(humanChoice, computerChoice)
-		    After loop ends:
-		        If humanScore > computerScore:
-		            Output "You won the game!"
-		        Else if computerScore > humanScore:
-		            Output "The computer won the game!"
-		        Else:
-		            Output "It's a tie!"
-		
-		Call playGame() to start the game
-	*/
-	
 	let humanScore = 0;
 	let computerScore = 0;
+	let gameOver = false;
 
-	function playRound(humanChoice, computerChoice) {
+	const resultsDiv = document.getElementById('results');
+	const scoreDiv = document.getElementById('score');
+	const rockButton = document.getElementById('rock');
+	const paperButton = document.getElementById('paper');
+	const scissorsButton = document.getElementById('scissors');
+	const playRound = (humanChoice, computerChoice) => {
 		const human = humanChoice.toLowerCase();
 		const computer = computerChoice.toLowerCase();
-	
+
+		let roundResult = '';
+
 		if (human === computer) {
-			console.log("It's a tie!");
+			roundResult = "It's a tie!";
 		} else if (
 			(human === "rock" && computer === "scissors") ||
 			(human === "paper" && computer === "rock") ||
 			(human === "scissors" && computer === "paper")
 		) {
 			humanScore++;
-			console.log(
-				`You win! ${human.charAt(0).toUpperCase() + human.slice(1)} beats ${computer}.`
-			);
+			roundResult = `You win! ${human.charAt(0).toUpperCase() + human.slice(1)} beats ${computer}.`;
 		} else {
 			computerScore++;
-			console.log(
-				`You lose! ${computer.charAt(0).toUpperCase() + computer.slice(1)} beats ${human}.`
-			);
+			roundResult = `You lose! ${computer.charAt(0).toUpperCase() + computer.slice(1)} beats ${human}.`;
 		}
-		
-		console.log(`Human: ${humanScore} | Computer: ${computerScore}`);
-	}
 
-	function getComputerChoice() {
+		resultsDiv.innerHTML = `
+			<p>You chose: ${human.charAt(0).toUpperCase() + human.slice(1)}</p>
+			<p>Computer chose: ${computer.charAt(0).toUpperCase() + computer.slice(1)}</p>
+			<p>${roundResult}</p>
+		`;
+
+		updateScore();
+		checkWinner();
+	};
+
+	const getComputerChoice = () => {
 		const randomNumber = Math.random();
 		if (randomNumber < 1 / 3) {
 			return "rock";
@@ -89,75 +116,62 @@
 		} else {
 			return "scissors";
 		}
-	}
+	};
 
-	function getHumanChoice() {
-		const userInput = prompt("Choose rock, paper, or scissors:");
-		return userInput.toLowerCase();
-	}
+	const updateScore = () => {
+		scoreDiv.textContent = `Human: ${humanScore} | Computer: ${computerScore}`;
+	};
 
-	function playGame() {
-		for (let i = 0; i < 5; i++) {
-			const human = getHumanChoice();
-			const computer = getComputerChoice();
-
-			playRound(human, computer);
+	const checkWinner = () => {
+		if (humanScore === 5) {
+			resultsDiv.innerHTML += '<div class="winner">Human Won</div>';
+			gameOver = true;
+			disableButtons();
+		} else if (computerScore === 5) {
+			resultsDiv.innerHTML += '<div class="winner">Computer Won</div>';
+			gameOver = true;
+			disableButtons();
 		}
+	};
 
-		if (humanScore > computerScore) {
-			console.log("You won the game!");
-		} else if (computerScore > humanScore) {
-			console.log("The computer won the game!");
-		} else {
-			console.log("It's a tie!");
+	const disableButtons = () => {
+		rockButton.disabled = true;
+		paperButton.disabled = true;
+		scissorsButton.disabled = true;
+	};
+
+	const resetGame = () => {
+		humanScore = 0;
+		computerScore = 0;
+		gameOver = false;
+		rockButton.disabled = false;
+		paperButton.disabled = false;
+		scissorsButton.disabled = false;
+		resultsDiv.innerHTML = '<p>First to 5 points wins</p>';
+		updateScore();
+	};
+
+	rockButton.addEventListener('click', () => {
+		if (!gameOver) {
+			const computerChoice = getComputerChoice();
+			playRound('rock', computerChoice);
 		}
-	}
+	});
 
-	playGame();
+	paperButton.addEventListener('click', () => {
+		if (!gameOver) {
+			const computerChoice = getComputerChoice();
+			playRound('paper', computerChoice);
+		}
+	});
 
-	console.log(`
-Tests:
-	test1 - ${(() => {
-		// Human: rock, Computer: scissors => human wins
-		const prevHuman = humanScore;
-		const prevComputer = computerScore;
-		playRound("rock", "scissors");
-		return humanScore === prevHuman + 1 && computerScore === prevComputer;
-	})()}
-	
-	test2 - ${(() => {
-		// Human: rock, Computer: paper => computer wins
-		const prevHuman = humanScore;
-		const prevComputer = computerScore;
-		playRound("rock", "paper");
-		return computerScore === prevComputer + 1 && humanScore === prevHuman;
-	})()}
-	
-	test3 - ${(() => {
-		// Human: paper, Computer: paper => tie
-		const prevHuman = humanScore;
-		const prevComputer = computerScore;
-		playRound("paper", "paper");
-		return computerScore === prevComputer && humanScore === prevHuman;
-	})()}
-	
-	test4 - ${(() => {
-		// Check case insensitivity: Human: "Rock", Computer: "scissors"
-		const prevHuman = humanScore;
-		const prevComputer = computerScore;
-		playRound("Rock", "scissors");
-		return humanScore === prevHuman + 1 && computerScore === prevComputer;
-	})()}
-	
-	test5 - ${(() => {
-		// Unexpected input: Human: "fire", Computer: "rock"
-		const prevHuman = humanScore;
-		const prevComputer = computerScore;
-		playRound("fire", "rock");
-		// Should count as a loss since "fire" is invalid => no score change ideally, but your function adds to computerScore
-		return computerScore === prevComputer + 1;
-	})()}
+	scissorsButton.addEventListener('click', () => {
+		if (!gameOver) {
+			const computerChoice = getComputerChoice();
+			playRound('scissors', computerChoice);
+		}
+	});
 
-	`);
+	scoreDiv.addEventListener('dblclick', resetGame);
 </script>
 </html>
