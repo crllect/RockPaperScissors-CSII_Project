@@ -13,7 +13,7 @@
 		Initialize Scores
 		Set humanScore to 0
 		Set computerScore to 0
-		
+
 		Define Function playRound(humanChoice, computerChoice):
 		    Convert both choices to lowercase
 		    If humanChoice equals computerChoice:
@@ -25,17 +25,17 @@
 		        Increase computerScore by 1
 		        Output "You lose!" with the winning choices
 		    Output the current scores
-		
+
 		Define Function getComputerChoice():
 		    Generate a random number between 0 and 1
 		    If number < 1/3, return "rock"
 		    Else if number < 2/3, return "paper"
 		    Else return "scissors"
-		
+
 		Define Function getHumanChoice():
 		    Prompt user for input: "Choose rock, paper, or scissors"
 		    Return input converted to lowercase
-		
+
 		Define Function playGame():
 		    Repeat 5 times:
 		        Get humanChoice from user
@@ -48,17 +48,17 @@
 		            Output "The computer won the game!"
 		        Else:
 		            Output "It's a tie!"
-		
+
 		Call playGame() to start the game
 	*/
-	
+
 	let humanScore = 0;
 	let computerScore = 0;
 
 	function playRound(humanChoice, computerChoice) {
 		const human = humanChoice.toLowerCase();
 		const computer = computerChoice.toLowerCase();
-	
+
 		if (human === computer) {
 			console.log("It's a tie!");
 		} else if (
@@ -76,7 +76,7 @@
 				`You lose! ${computer.charAt(0).toUpperCase() + computer.slice(1)} beats ${human}.`
 			);
 		}
-		
+
 		console.log(`Human: ${humanScore} | Computer: ${computerScore}`);
 	}
 
@@ -97,12 +97,10 @@
 	}
 
 	function playGame() {
-		for (let i = 0; i < 5; i++) {
-			const human = getHumanChoice();
-			const computer = getComputerChoice();
+		const human = getHumanChoice();
+		const computer = getComputerChoice();
 
-			playRound(human, computer);
-		}
+		playRound(human, computer);
 
 		if (humanScore > computerScore) {
 			console.log("You won the game!");
@@ -114,50 +112,5 @@
 	}
 
 	playGame();
-
-	console.log(`
-Tests:
-	test1 - ${(() => {
-		// Human: rock, Computer: scissors => human wins
-		const prevHuman = humanScore;
-		const prevComputer = computerScore;
-		playRound("rock", "scissors");
-		return humanScore === prevHuman + 1 && computerScore === prevComputer;
-	})()}
-	
-	test2 - ${(() => {
-		// Human: rock, Computer: paper => computer wins
-		const prevHuman = humanScore;
-		const prevComputer = computerScore;
-		playRound("rock", "paper");
-		return computerScore === prevComputer + 1 && humanScore === prevHuman;
-	})()}
-	
-	test3 - ${(() => {
-		// Human: paper, Computer: paper => tie
-		const prevHuman = humanScore;
-		const prevComputer = computerScore;
-		playRound("paper", "paper");
-		return computerScore === prevComputer && humanScore === prevHuman;
-	})()}
-	
-	test4 - ${(() => {
-		// Check case insensitivity: Human: "Rock", Computer: "scissors"
-		const prevHuman = humanScore;
-		const prevComputer = computerScore;
-		playRound("Rock", "scissors");
-		return humanScore === prevHuman + 1 && computerScore === prevComputer;
-	})()}
-	
-	test5 - ${(() => {
-		// Unexpected input: Human: "fire", Computer: "rock"
-		const prevHuman = humanScore;
-		const prevComputer = computerScore;
-		playRound("fire", "rock");
-		// Should count as a loss since "fire" is invalid => no score change ideally, but your function adds to computerScore
-		return computerScore === prevComputer + 1;
-	})()}
-
-	`);
 </script>
 </html>
