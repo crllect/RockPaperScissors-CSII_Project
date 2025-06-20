@@ -66,4 +66,112 @@
 	</div>
 	<div id="score">Human: 0 | Computer: 0</div>
 </body>
+
+<script>
+	let humanScore = 0;
+	let computerScore = 0;
+	let gameOver = false;
+
+	const resultsDiv = document.getElementById('results');
+	const scoreDiv = document.getElementById('score');
+	const rockButton = document.getElementById('rock');
+	const paperButton = document.getElementById('paper');
+	const scissorsButton = document.getElementById('scissors');
+	const playRound = (humanChoice, computerChoice) => {
+		const human = humanChoice.toLowerCase();
+		const computer = computerChoice.toLowerCase();
+
+		let roundResult = '';
+
+		if (human === computer) {
+			roundResult = "It's a tie!";
+		} else if (
+			(human === "rock" && computer === "scissors") ||
+			(human === "paper" && computer === "rock") ||
+			(human === "scissors" && computer === "paper")
+		) {
+			humanScore++;
+			roundResult = `You win! ${human.charAt(0).toUpperCase() + human.slice(1)} beats ${computer}.`;
+		} else {
+			computerScore++;
+			roundResult = `You lose! ${computer.charAt(0).toUpperCase() + computer.slice(1)} beats ${human}.`;
+		}
+
+		resultsDiv.innerHTML = `
+			<p>You chose: ${human.charAt(0).toUpperCase() + human.slice(1)}</p>
+			<p>Computer chose: ${computer.charAt(0).toUpperCase() + computer.slice(1)}</p>
+			<p>${roundResult}</p>
+		`;
+
+		updateScore();
+		checkWinner();
+	};
+
+	const getComputerChoice = () => {
+		const randomNumber = Math.random();
+		if (randomNumber < 1 / 3) {
+			return "rock";
+		} else if (randomNumber < 2 / 3) {
+			return "paper";
+		} else {
+			return "scissors";
+		}
+	};
+
+	const updateScore = () => {
+		scoreDiv.textContent = `Human: ${humanScore} | Computer: ${computerScore}`;
+	};
+
+	const checkWinner = () => {
+		if (humanScore === 5) {
+			resultsDiv.innerHTML += '<div class="winner">Human Won</div>';
+			gameOver = true;
+			disableButtons();
+		} else if (computerScore === 5) {
+			resultsDiv.innerHTML += '<div class="winner">Computer Won</div>';
+			gameOver = true;
+			disableButtons();
+		}
+	};
+
+	const disableButtons = () => {
+		rockButton.disabled = true;
+		paperButton.disabled = true;
+		scissorsButton.disabled = true;
+	};
+
+	const resetGame = () => {
+		humanScore = 0;
+		computerScore = 0;
+		gameOver = false;
+		rockButton.disabled = false;
+		paperButton.disabled = false;
+		scissorsButton.disabled = false;
+		resultsDiv.innerHTML = '<p>First to 5 points wins</p>';
+		updateScore();
+	};
+
+	rockButton.addEventListener('click', () => {
+		if (!gameOver) {
+			const computerChoice = getComputerChoice();
+			playRound('rock', computerChoice);
+		}
+	});
+
+	paperButton.addEventListener('click', () => {
+		if (!gameOver) {
+			const computerChoice = getComputerChoice();
+			playRound('paper', computerChoice);
+		}
+	});
+
+	scissorsButton.addEventListener('click', () => {
+		if (!gameOver) {
+			const computerChoice = getComputerChoice();
+			playRound('scissors', computerChoice);
+		}
+	});
+
+	scoreDiv.addEventListener('dblclick', resetGame);
+</script>
 </html>
